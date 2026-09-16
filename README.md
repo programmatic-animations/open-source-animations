@@ -2,6 +2,18 @@
 
 Three.js cinematic scenes with a reusable character/prop runtime and 1080p MP4 export.
 
+## Episode 2: The Honey Deal
+
+The default scene is `src/scenes/honeyBetrayal.js`: a 47-second continuation after the rabbits laugh. It covers their bargain, honey pickup, ladder deployment, climb, handover, betrayal, fall, and an angry close-up. `SHOTS` lists the editorial beats; every pose derives from absolute time.
+
+Use Play/Pause and the timeline to review. `?t=27` opens the new reluctant-reaction shot; `?episode=ep2&scene=thumbnail` opens the programmatic Episode 2 thumbnail; `?episode=ep1&scene=thumbnail` preserves the original. The bear looks up at the rabbit, glances at the offered paw, hesitates, then extends the comb. The continuation stops at 47 seconds and supplies that default export end time. Set End can override it. `npm run dev` starts both the preview and export server. The export button checks the server before recording. Both localhost and 127.0.0.1 preview origins are supported.
+
+Validation: `node --test tests/honeyBetrayal.test.js` checks finite transforms, reversible scrubbing, and the story's final object positions.
+
+## Authoring structure
+
+See [Episode → scene → shot](docs/AUTHORING.md). The preview includes episode, scene, and shot selectors. `src/episodes/catalog.js` owns the hierarchy; `src/shots/` owns camera cuts.
+
 ## Commands
 
 ```bash
@@ -14,7 +26,7 @@ App: `http://localhost:5173`
 node export-server.mjs
 ```
 
-Export server: `http://localhost:5174`
+Export server: `http://127.0.0.1:5174` (started automatically by `npm run dev`; the standalone command is only needed when running Vite separately).
 
 ## Module structure
 
@@ -54,7 +66,7 @@ export-server.mjs              WebM → H.264 MP4 via ffmpeg-static
 
 ## Scene 1 entry point
 
-`src/main.js` loads `createBearHoneyTrapScene` from `src/scenes/bearHoneyTrap.js`.
+`src/scenes/bearHoneyTrap.js` contains the original opening; `src/main.js` now defaults to the continuation described above.
 
 `SCENE_CONFIG`:
 

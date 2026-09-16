@@ -20,7 +20,7 @@ export function createPitRabbitsScene({ scene, camera }) {
   scene.background = new THREE.Color(0x9fd6ff);
 
   const backdrop = createBackdrop({
-    position: [0, 4.5, -8]
+    position: { x: 0, y: 4.5, z: -8 }
   });
 
   scene.add(backdrop);

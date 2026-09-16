@@ -1,3 +1,14 @@
+const EXPORT_SERVER = 'http://127.0.0.1:5174';
+
+async function checkExportServer() {
+  try {
+    const response = await fetch(`${EXPORT_SERVER}/health`, { signal: AbortSignal.timeout(3000) });
+    if (!response.ok) throw new Error('unhealthy');
+  } catch {
+    throw new Error('Export server unavailable. Start npm run dev (or node export-server.mjs).');
+  }
+}
+
 export function isExportMode() {
   return new URLSearchParams(window.location.search).get('export') === '1';
 }
@@ -60,14 +71,17 @@ export function setupExportButton({ getSceneEndTime }) {
     zIndex: '9999'
   });
 
-  exportButton.onclick = () => {
+  exportButton.onclick = async () => {
     const sceneEndTime = getSceneEndTime();
 
     if (!sceneEndTime) return;
 
+    try { await checkExportServer(); } catch (error) { showStatus(error.message); return; }
+
     const url = new URL(window.location.href);
 
     url.searchParams.set('export', '1');
+    url.searchParams.delete('t');
 
     window.location.href = url.toString();
   };
@@ -96,7 +110,7 @@ export function createVideoExporter({
   function onAfterRender(time) {
     if (
       isExportMode() &&
-      exportRecorder &&
+      exportRecorder?.state === 'recording' &&
       !exportFinished &&
       time >= getSceneEndTime()
     ) {
@@ -116,6 +130,11 @@ export function createVideoExporter({
       return;
     }
 
+    try {
+    await checkExportServer();
+    if (typeof MediaRecorder === 'undefined' || !renderer.domElement.captureStream) {
+      throw new Error('This browser cannot record canvas video. Use Chrome for export.');
+    }
     renderer.setPixelRatio(1);
     renderer.setSize(1920, 1080, false);
 
@@ -128,10 +147,8 @@ export function createVideoExporter({
 
     const stream = renderer.domElement.captureStream(60);
 
-    const mimeType =
-      MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
-        ? 'video/webm;codecs=vp9'
-        : 'video/webm';
+    const mimeType = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4'].find(type => MediaRecorder.isTypeSupported(type));
+    if (!mimeType) { stream.getTracks().forEach(track => track.stop()); throw new Error('No supported video recording format.'); }
 
     exportRecorder = new MediaRecorder(stream, {
       mimeType,
@@ -151,15 +168,15 @@ export function createVideoExporter({
 
       try {
         const blob = new Blob(exportChunks, {
-          type: 'video/webm'
+          type: mimeType
         });
 
         const response = await fetch(
-          'http://localhost:5174/export',
+          `${EXPORT_SERVER}/export`,
           {
             method: 'POST',
             headers: {
-              'Content-Type': 'video/webm',
+              'Content-Type': mimeType,
               'X-Scene-Id': sceneConfig.id
             },
             body: blob
@@ -175,14 +192,26 @@ export function createVideoExporter({
         showStatus(`Done: ${result.file}`);
       } catch (error) {
         showStatus(`Export failed: ${error.message}`);
+      } finally {
+        stream.getTracks().forEach(track => track.stop());
       }
     };
 
+    exportRecorder.onerror = event => {
+      pauseScene();
+      stream.getTracks().forEach(track => track.stop());
+      showStatus(`Recording failed: ${event.error?.message ?? 'unknown error'}`);
+    };
+    exportFinished = false;
     restartScene();
 
     exportRecorder.start();
 
     showStatus(`Recording ${sceneConfig.title}...`);
+    } catch (error) {
+      pauseScene();
+      showStatus(`Export failed: ${error.message}`);
+    }
   }
 
   return {

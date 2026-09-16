@@ -5,18 +5,22 @@ export function createSceneRuntime({
   scene,
   camera,
   update,
-  afterRender
+  afterRender,
+  duration = Infinity
 }) {
   const clock = new THREE.Clock();
   let currentSceneTime = 0;
   let scenePaused = false;
+  let timeOffset = 0;
 
   function animate() {
     requestAnimationFrame(animate);
 
     const time = scenePaused
       ? currentSceneTime
-      : clock.getElapsedTime();
+      : Math.min(duration, clock.getElapsedTime() + timeOffset);
+
+    if (time >= duration) scenePaused = true;
 
     currentSceneTime = time;
 
@@ -31,6 +35,16 @@ export function createSceneRuntime({
     start: animate,
     getCurrentTime: () => currentSceneTime,
     isPaused: () => scenePaused,
+    seek(time) {
+      timeOffset = Math.max(0, Math.min(duration, time));
+      currentSceneTime = timeOffset;
+      clock.start();
+    },
+    resume() {
+      timeOffset = currentSceneTime;
+      clock.start();
+      scenePaused = false;
+    },
     pause() {
       scenePaused = true;
     },
@@ -39,6 +53,7 @@ export function createSceneRuntime({
       clock.elapsedTime = 0;
       clock.start();
       currentSceneTime = 0;
+      timeOffset = 0;
       scenePaused = false;
     }
   };
