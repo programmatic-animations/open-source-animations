@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { speechRoute } from './scripts/speech-server.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -58,12 +59,14 @@ http.createServer(async (req, res) => {
     res.setHeader('Vary', 'Origin');
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Scene-Id');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Scene-Id, X-Speech-Language');
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
     return res.end();
   }
+
+  if (await speechRoute(req, res)) return;
 
   if (req.method === 'GET' && req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });

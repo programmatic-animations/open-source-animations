@@ -14,7 +14,7 @@ export const EPISODES = [
     { id: 'pit-rabbits', title: 'The laughing rabbits', duration: 13.07, seekable: false,
       shots: defineShots([{ id: 'pit-master', title: 'Recovery and ridicule', duration: 13.07 }]), create: createPitRabbitsScene }
   ] },
-  { id: 'ep2', title: 'Episode 2 — The Honey Deal', thumbnail: { ...thumbnail2, create: createBearEp2Thumbnail }, scenes: [
+  { id: 'ep2', title: 'Episode 2 — Betrayal', thumbnail: { ...thumbnail2, create: createBearEp2Thumbnail }, scenes: [
     { ...betrayal, seekable: true, create: createHoneyBetrayalScene }
   ] }
 ];

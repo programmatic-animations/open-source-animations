@@ -2,7 +2,7 @@
 
 Three.js cinematic scenes with a reusable character/prop runtime and 1080p MP4 export.
 
-## Episode 2: The Honey Deal
+## Episode 2: Betrayal
 
 The default scene is `src/scenes/honeyBetrayal.js`: a 47-second continuation after the rabbits laugh. It covers their bargain, honey pickup, ladder deployment, climb, handover, betrayal, fall, and an angry close-up. `SHOTS` lists the editorial beats; every pose derives from absolute time.
 
@@ -82,7 +82,7 @@ export-server.mjs              WebM → H.264 MP4 via ffmpeg-static
 1. Add `src/scenes/yourScene.js` with its own `SCENE_CONFIG` (`id`, `title`) and `createYourScene({ scene, camera, renderer })` returning `{ config, update }`.
 2. Compose reused factories (`createBear`, `createTree`, …) instead of copying meshes.
 3. Keep story timing, `attach()` reparenting, and cinematic phases in the scene module.
-4. Point `src/main.js` at the new scene (or add a scene picker later).
+4. Register the scene under its episode in `src/episodes/catalog.js`; the existing selectors expose it.
 5. Reuse `createSceneRuntime`, scene-end helpers, and `createVideoExporter` unchanged. They key storage and MP4 names off `sceneConfig.id`.
 
 ## Reusing characters and props
@@ -126,3 +126,35 @@ Keep `node export-server.mjs` running during export.
 - Runtime: `createSceneRuntime({ renderer, scene, camera, update, afterRender })` → `start`, `getCurrentTime`, `pause`, `restartFromZero`
 - End time: `getSceneEndTime(sceneId)`, `setSceneEndTime(sceneId, time)`, `clearSceneEndTime(sceneId)`, `setupSceneEndButton(...)`
 - Export: `isExportMode()`, `setupExportButton({ sceneEndTime })`, `createVideoExporter({ renderer, camera, sceneConfig, getSceneEndTime, restartScene, pauseScene })`
+
+## Mouth Studio — standalone speech overlay
+
+Mouth Studio turns a voice recording into a programmatic Three.js talking-mouth overlay. Rhubarb recognizes speech sounds and produces timed mouth shapes; the studio blends those shapes and renders transparent frames. Place, resize, and time the result over your character in a video editor. It does not change the episode animation or attach a mouth to the character automatically.
+
+### Open it
+
+From the project directory:
+
+```bash
+npm install             # first setup only
+npm run setup:speech     # first setup only: downloads Rhubarb 1.14.0
+npm run dev
+```
+
+Open [Mouth Studio](http://127.0.0.1:5173/mouth.html), or click **Mouth Studio** in the animation preview. Keep the terminal running. Both the preview (5173) and local export server (5174) are needed. Python 3 is required for ZIP export; macOS/Linux setup also uses `unzip`. An existing Rhubarb executable can be supplied through `RHUBARB_PATH`. See [the complete guide](docs/MOUTH_STUDIO.md) for usage, Resolve import, troubleshooting, and architecture.
+
+### Use it
+
+1. Choose a recording (up to 30 MB / 120 seconds).
+2. Select English or the phonetic recognizer for other languages; click **Create lip sync**.
+3. Play, pause, or scrub to review.
+4. Choose **PNG sequence + WAV**, the default Resolve workflow, and optionally include voice.
+5. Click **Export transparent overlay** and extract the downloaded ZIP.
+
+In Resolve's Media Storage menu, disable **Show Individual Frames** and import the numbered PNGs as one sequence. Set Clip Attributes to **30 fps** and **Straight** alpha, place the sequence above your animation, and align `voice.wav` with its first frame.
+
+ProRes 4444 MOV remains available, but the user reported an opaque black background in Resolve even with Straight alpha. FFmpeg can read its alpha; that alone does not establish Resolve compatibility. Use PNG sequence + WAV for this workflow.
+
+Exports are 512×512 at 30 fps, downloaded in the browser and copied to `exports/`. Processing stays local. The checkerboard is preview-only. See the guide for session lifetime and storage details.
+
+Validation: `node --test tests/*.test.js` and `npm run build`.

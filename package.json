@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "setup:speech": "node scripts/install-rhubarb.mjs",
     "dev": "concurrently -k \"vite --host 127.0.0.1 --strictPort\" \"node export-server.mjs\"",
     "build": "vite build",
     "preview": "vite preview"

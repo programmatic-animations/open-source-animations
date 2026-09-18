@@ -1,0 +1,1 @@
+Import these PNGs as one image sequence in Resolve (Media Storage menu: disable Show Individual Frames). Set Clip Attributes > Video Frame Rate to 30; Alpha Mode: Straight. Put it on V2 above your animation. Add voice.wav aligned with the first frame.

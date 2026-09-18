@@ -1,0 +1,14 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+const platform = { darwin: 'macOS', linux: 'Linux', win32: 'Windows' }[process.platform];
+if (!platform) throw new Error('Unsupported platform. Set RHUBARB_PATH to a Rhubarb binary.');
+const name = `Rhubarb-Lip-Sync-1.14.0-${platform}`;
+const directory = path.resolve('.tools'); await fs.mkdir(directory, { recursive: true });
+const response = await fetch(`https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.14.0/${name}.zip`);
+if (!response.ok) throw new Error(`Download failed: ${response.status}`);
+const zip = path.join(directory, `${name}.zip`); await fs.writeFile(zip, Buffer.from(await response.arrayBuffer()));
+if (process.platform === 'win32') execFileSync('tar', ['-xf', zip, '-C', directory]);
+else execFileSync('unzip', ['-q', '-o', zip, '-d', directory]);
+await fs.unlink(zip);
+console.log(`Installed Rhubarb 1.14.0 in ${directory}/${name}. Its license is included in that folder.`);

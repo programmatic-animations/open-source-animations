@@ -143,6 +143,10 @@ if (!exportMode) {
     const refresh = refreshTransport;
     refreshTransport = time => { refresh?.(time); shotSelect.value = getShotAt(SCENE_CONFIG.shots, time).shot.id; };
   }
+  const mouthLink = document.createElement('a');
+  mouthLink.href = '/mouth.html'; mouthLink.textContent = 'Mouth Studio';
+  Object.assign(mouthLink.style, { color: '#fff', background: '#25382d', padding: '5px 10px', borderRadius: '4px', font: '13px system-ui', textDecoration: 'none' });
+  navigation.appendChild(mouthLink);
   document.body.appendChild(navigation);
 }
 runtime.start();
