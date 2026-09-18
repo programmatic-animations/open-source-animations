@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { VIDEO_FORMATS, resolveVideoFormat, applyVideoFraming, fitVideoPreview } from './runtime/videoFormat.js';
 import { EPISODES, resolveSelection } from './episodes/catalog.js';
 import { getShotAt } from './runtime/shotTimeline.js';
 import { createSceneRuntime } from './runtime/sceneRuntime.js';
@@ -20,6 +21,7 @@ const exportMode = isExportMode();
 const selection = resolveSelection(new URLSearchParams(location.search));
 const thumbnailMode = selection.thumbnail;
 const SCENE_CONFIG = selection.scene;
+let videoFormat = resolveVideoFormat(thumbnailMode ? 'landscape' : new URLSearchParams(location.search).get('format'));
 
 const savedEndTime = getSceneEndTime(SCENE_CONFIG.id);
 // The old full-scene marker must include the newly inserted reaction.
@@ -35,7 +37,7 @@ const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
   60,
-  window.innerWidth / window.innerHeight,
+  videoFormat.width / videoFormat.height,
   0.1,
   1000
 );
@@ -49,6 +51,16 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 document.body.innerHTML = '';
 document.body.appendChild(renderer.domElement);
+document.body.style.background = '#101010';
+Object.assign(renderer.domElement.style, { position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' });
+function resizePreview() {
+  if (exportMode) return;
+  const { width, height } = fitVideoPreview(window.innerWidth, window.innerHeight, videoFormat);
+  renderer.setSize(width, height);
+  camera.aspect = videoFormat.width / videoFormat.height;
+  camera.updateProjectionMatrix();
+}
+resizePreview();
 
 let runtime;
 let refreshTransport;
@@ -59,6 +71,7 @@ const exporter = createVideoExporter({
   renderer,
   camera,
   sceneConfig: SCENE_CONFIG,
+  getVideoFormat: () => videoFormat,
   getSceneEndTime: () => sceneEndTime,
   restartScene: () => runtime.restartFromZero(),
   pauseScene: () => runtime.pause()
@@ -68,7 +81,11 @@ runtime = createSceneRuntime({
   renderer,
   scene,
   camera,
-  update,
+  update: time => {
+    camera.zoom = 1;
+    update(time);
+    if (!thumbnailMode) applyVideoFraming(camera, videoFormat, getShotAt(SCENE_CONFIG.shots, time).shot);
+  },
   duration: SCENE_CONFIG.duration,
   afterRender: (time) => { exporter.onAfterRender(time); refreshTransport?.(time); }
 });
@@ -79,6 +96,7 @@ if (!exportMode) {
     scene,
     camera,
     filename: `${SCENE_CONFIG.id}.png`,
+    getVideoFormat: () => videoFormat,
     saveToProject: thumbnailMode
   });
 }
@@ -101,7 +119,8 @@ if (!exportMode && !thumbnailMode) {
   });
 
   exportControls = setupExportButton({
-    getSceneEndTime: () => sceneEndTime
+    getSceneEndTime: () => sceneEndTime,
+    getVideoFormat: () => videoFormat
   });
 }
 
@@ -124,14 +143,14 @@ if (!exportMode && !thumbnailMode) {
 }
 if (!exportMode) {
   const navigation = document.createElement('div');
-  Object.assign(navigation.style, { position: 'fixed', top: '16px', left: '16px', display: 'flex', gap: '8px', zIndex: 100 });
+  Object.assign(navigation.style, { position: 'fixed', top: '16px', left: '16px', display: 'flex', flexWrap: 'wrap', maxWidth: 'calc(100vw - 32px)', gap: '8px', zIndex: 100 });
   function select(label, entries, value, change) {
     const element = document.createElement('select'); element.setAttribute('aria-label', label);
     for (const [id, title] of entries) { const option = new Option(title, id); element.add(option); }
     element.value = value; element.onchange = () => change(element.value); navigation.appendChild(element);
   }
   function navigate(episode, scene) {
-    const url = new URL(location.href); url.search = new URLSearchParams({ episode, scene }); location.href = url;
+    const url = new URL(location.href); url.search = new URLSearchParams({ episode, scene, format: videoFormat.id }); location.href = url;
   }
   select('Episode', EPISODES.map(e => [e.id, e.title]), selection.episode.id, id => navigate(id, ''));
   select('Scene', [...selection.episode.scenes.map(s => [s.id, s.title]), ['thumbnail', 'Thumbnail']], thumbnailMode ? 'thumbnail' : SCENE_CONFIG.id, id => navigate(selection.episode.id, id));
@@ -143,6 +162,11 @@ if (!exportMode) {
     const refresh = refreshTransport;
     refreshTransport = time => { refresh?.(time); shotSelect.value = getShotAt(SCENE_CONFIG.shots, time).shot.id; };
   }
+  if (!thumbnailMode) select('Video format', VIDEO_FORMATS.map(f => [f.id, f.label]), videoFormat.id, id => {
+    videoFormat = resolveVideoFormat(id);
+    const url = new URL(location.href); url.searchParams.set('format', id); history.replaceState(null, '', url);
+    resizePreview();
+  });
   const mouthLink = document.createElement('a');
   mouthLink.href = '/mouth.html'; mouthLink.textContent = 'Mouth Studio';
   Object.assign(mouthLink.style, { color: '#fff', background: '#25382d', padding: '5px 10px', borderRadius: '4px', font: '13px system-ui', textDecoration: 'none' });
@@ -151,10 +175,4 @@ if (!exportMode) {
 }
 runtime.start();
 
-window.addEventListener('resize', () => {
-  if (exportMode) return;
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+window.addEventListener('resize', resizePreview);

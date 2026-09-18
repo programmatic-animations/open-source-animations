@@ -47,6 +47,14 @@ Episode 2's approved animation is 47 seconds with 14 shots. The reluctant close-
 - Mouth Studio and earlier thumbnail changes are being committed together at the user’s request. Always inspect fresh git state instead of assuming commit or remote status.
 - Latest thumbnail build passed and its PNG was visually inspected. Before that, six animation/timeline tests passed and 189 sampled frames confirmed the hierarchy refactor preserved poses and cameras.
 
+# Video format handoff
+
+- Animation preview now has Landscape 1920×1080 and TikTok 1080×1920 format selection. `src/runtime/videoFormat.js` owns presets/framing/names.
+- URL `format=vertical` persists through navigation and export. Live switching preserves playback; preview fits the chosen aspect ratio.
+- MP4 and scene PNG use selected dimensions. Vertical files add `-vertical`; landscape names stay unchanged.
+- Vertical projection preserves horizontal coverage and shows more above/below. Optional shot `verticalZoom` tightens framing; review shots before cropping. Approved choreography and landscape cameras are unchanged.
+- Thumbnail output stays landscape; Mouth Studio stays independent. See README and `docs/AUTHORING.md`.
+
 # Mouth Studio handoff
 
 - Open `/mouth.html` from the running preview, or use its Mouth Studio link.

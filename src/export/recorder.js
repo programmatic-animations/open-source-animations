@@ -1,3 +1,4 @@
+import { resolveVideoFormat, videoFilename } from '../runtime/videoFormat.js';
 const EXPORT_SERVER = 'http://127.0.0.1:5174';
 
 async function checkExportServer() {
@@ -39,7 +40,7 @@ function showStatus(text) {
   status.textContent = text;
 }
 
-export function setupExportButton({ getSceneEndTime }) {
+export function setupExportButton({ getSceneEndTime, getVideoFormat = () => resolveVideoFormat() }) {
   const exportButton = document.createElement('button');
 
   function refresh() {
@@ -81,6 +82,7 @@ export function setupExportButton({ getSceneEndTime }) {
     const url = new URL(window.location.href);
 
     url.searchParams.set('export', '1');
+    url.searchParams.set('format', getVideoFormat().id);
     url.searchParams.delete('t');
 
     window.location.href = url.toString();
@@ -99,6 +101,7 @@ export function createVideoExporter({
   renderer,
   camera,
   sceneConfig,
+  getVideoFormat = () => resolveVideoFormat(),
   getSceneEndTime,
   restartScene,
   pauseScene
@@ -135,14 +138,15 @@ export function createVideoExporter({
     if (typeof MediaRecorder === 'undefined' || !renderer.domElement.captureStream) {
       throw new Error('This browser cannot record canvas video. Use Chrome for export.');
     }
+    const format = getVideoFormat();
     renderer.setPixelRatio(1);
-    renderer.setSize(1920, 1080, false);
+    renderer.setSize(format.width, format.height, false);
 
     renderer.domElement.style.width = '100vw';
     renderer.domElement.style.height = '100vh';
     renderer.domElement.style.objectFit = 'contain';
 
-    camera.aspect = 1920 / 1080;
+    camera.aspect = format.width / format.height;
     camera.updateProjectionMatrix();
 
     const stream = renderer.domElement.captureStream(60);
@@ -177,7 +181,7 @@ export function createVideoExporter({
             method: 'POST',
             headers: {
               'Content-Type': mimeType,
-              'X-Scene-Id': sceneConfig.id
+              'X-Scene-Id': videoFilename(sceneConfig.id, format)
             },
             body: blob
           }

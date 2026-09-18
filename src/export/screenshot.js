@@ -1,3 +1,4 @@
+import { resolveVideoFormat, videoFilename } from '../runtime/videoFormat.js';
 import * as THREE from 'three';
 
 export function captureScreenshot({
@@ -64,7 +65,8 @@ export function setupScreenshotButton({
   scene,
   camera,
   filename = 'scene.png',
-  saveToProject = false
+  saveToProject = false,
+  getVideoFormat = () => resolveVideoFormat()
 }) {
   const button = document.createElement('button');
 
@@ -84,13 +86,14 @@ export function setupScreenshotButton({
   });
 
   button.onclick = () => {
+    const format = saveToProject ? resolveVideoFormat() : getVideoFormat();
     captureScreenshot({
       renderer,
       scene,
       camera,
-      filename,
-      width: 1920,
-      height: 1080,
+      filename: `${videoFilename(filename.replace(/\.png$/, ''), format)}.png`,
+      width: format.width,
+      height: format.height,
       saveToProject,
       onSaved: message => { button.textContent = message; }
     });

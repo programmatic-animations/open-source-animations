@@ -10,6 +10,16 @@ Use Play/Pause and the timeline to review. `?t=27` opens the new reluctant-react
 
 Validation: `node --test tests/honeyBetrayal.test.js` checks finite transforms, reversible scrubbing, and the story's final object positions.
 
+## Video formats — YouTube and TikTok
+
+Use **Video format** in the animation preview to choose **Landscape · 1920 × 1080 (16:9)** or **TikTok · 1080 × 1920 (9:16)**. Landscape is the default. The preview fits the selected aspect ratio inside the window without stretching; MP4 and scene PNG exports use the exact selected resolution. Switching format preserves playback position and does not restart legacy scenes.
+
+The selection is stored in the URL (`?episode=ep2&format=vertical`) and follows scene/episode navigation and export reloads. Landscape videos retain `exports/<scene-id>.mp4`; vertical videos use `exports/<scene-id>-vertical.mp4` so they do not overwrite landscape exports. Scene PNG downloads follow the same naming convention.
+
+Vertical framing preserves the landscape horizontal field of view and reveals additional space above/below. It does not change acting, timing, or camera movement. This conservative framing may make subjects smaller; authors can tune individual shots using `verticalZoom` (see the authoring guide). Review each shot in vertical before publishing.
+
+Thumbnail mode stays 1920×1080 and has no video format picker. Mouth Studio is unchanged.
+
 ## Authoring structure
 
 See [Episode → scene → shot](docs/AUTHORING.md). The preview includes episode, scene, and shot selectors. `src/episodes/catalog.js` owns the hierarchy; `src/shots/` owns camera cuts.
@@ -113,10 +123,10 @@ Export stays disabled until an end time is present at page load (same as before)
 1. Set End, then **Export 1080p MP4**.
 2. Page reloads with `?export=1`.
 3. Scene restarts at time 0.
-4. Canvas is recorded at 1920×1080, pixel ratio 1, 16:9 camera, `captureStream(60)`, VP9 WebM when supported, 16 Mbps.
+4. Canvas is recorded at the selected resolution (1920×1080 or 1080×1920), pixel ratio 1, matching camera aspect, `captureStream(60)`, VP9 WebM when supported, 16 Mbps.
 5. Recording stops at the saved scene end time.
 6. WebM is POSTed to `http://localhost:5174/export` with `X-Scene-Id`.
-7. FFmpeg writes `exports/<scene-id>.mp4` (`libx264`, CRF 18, `yuv420p`, `+faststart`, no audio).
+7. FFmpeg writes `exports/<scene-id>.mp4` (or `<scene-id>-vertical.mp4`) (`libx264`, CRF 18, `yuv420p`, `+faststart`, no audio).
 
 Keep `node export-server.mjs` running during export.
 

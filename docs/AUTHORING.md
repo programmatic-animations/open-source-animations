@@ -35,3 +35,13 @@ Episode 1's two original scenes each use one uninterrupted camera take. Their du
 Thumbnail composition and text are editable in `src/scenes/bearEp2Thumbnail.js`. It uses Three.js character factories and canvas text, with no generated bitmap assets.
 
 Validation: `node --test tests/*.test.js` and `npm run build`.
+
+## Format-aware framing
+
+`src/runtime/videoFormat.js` owns the landscape (1920×1080) and vertical (1080×1920) presets, preview fit, camera projection, and output suffix. `main.js` applies framing after the scene update, so poses, camera movement, and shot timing stay shared. Landscape uses the original camera FOV and zoom 1. Vertical uses zoom `(9/16) / (16/9)` to preserve horizontal coverage while revealing more vertical space; no geometry or animation is changed.
+
+A shot definition may specify `verticalZoom: 1.2` for a 20% tighter vertical composition. Default is 1. This only affects vertical projection. Review action, hands, props, and expressions throughout the shot before tightening it. New scenes should author the shared camera normally; the runtime applies format framing consistently during playback, seeking, and recording. Do not bake the format correction into scene camera FOV as well.
+
+Format changes are live, without restarting stateful scenes. `format=vertical` in the URL survives navigation/export; missing or invalid values use landscape. MP4 and scene PNG dimensions follow the selected format; vertical filenames add `-vertical`. Thumbnails and Mouth Studio keep their separate output rules. Export remains per-scene.
+
+Verification: `tests/videoFormat.test.js` checks projection invariance, repeated application, landscape restoration, fitting, and names. Also review both preview orientations and exported dimensions when changing format plumbing.
