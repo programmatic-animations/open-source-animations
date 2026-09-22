@@ -1,9 +1,11 @@
+import { createBearEp3Thumbnail, SCENE_CONFIG as thumbnail3 } from '../scenes/bearEp3Thumbnail.js';
 import { defineShots } from '../runtime/shotTimeline.js';
 import { createBearHoneyTrapScene } from '../scenes/bearHoneyTrap.js';
 import { createPitRabbitsScene } from '../scenes/pitRabbits.js';
 import { createHoneyBetrayalScene, SCENE_CONFIG as betrayal } from '../scenes/honeyBetrayal.js';
 import { createBearEp1Thumbnail, SCENE_CONFIG as thumbnail1 } from '../scenes/bearEp1Thumbnail.js';
 import { createBearEp2Thumbnail, SCENE_CONFIG as thumbnail2 } from '../scenes/bearEp2Thumbnail.js';
+import { createDeathToRabbitsScene, SCENE_CONFIG as horror } from '../scenes/deathToRabbits.js';
 
 // An episode owns ordered scenes; each scene owns shots and its world factory.
 // Episode 1's original cameras are uninterrupted takes. Durations match existing exports.
@@ -16,12 +18,15 @@ export const EPISODES = [
   ] },
   { id: 'ep2', title: 'Episode 2 — Betrayal', thumbnail: { ...thumbnail2, create: createBearEp2Thumbnail }, scenes: [
     { ...betrayal, seekable: true, create: createHoneyBetrayalScene }
+  ] },
+  { id: 'ep3', title: 'Episode 3 — DEA*H to the RABBITS', thumbnail: { ...thumbnail3, create: createBearEp3Thumbnail }, scenes: [
+    { ...horror, seekable: true, create: createDeathToRabbitsScene }
   ] }
 ];
 
 export function resolveSelection(params) {
   const episode = EPISODES.find(e => e.id === params.get('episode')) ?? EPISODES.at(-1);
-  const thumbnail = params.get('scene') === 'thumbnail';
+  const thumbnail = params.get('scene') === 'thumbnail' && Boolean(episode.thumbnail);
   const scene = thumbnail ? episode.thumbnail : episode.scenes.find(s => s.id === params.get('scene')) ?? episode.scenes[0];
   return { episode, scene, thumbnail };
 }

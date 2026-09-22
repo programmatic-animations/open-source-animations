@@ -237,5 +237,6 @@ export function createHoneyBetrayalScene({ scene, camera }) {
       shot, camera, b, t, editorialTime, climb, fall, mix, ease
     });
   }
-  return { config: SCENE_CONFIG, update };
+  return { config: SCENE_CONFIG, update,
+    actors: { b, rabbits, honey, branch, mouth, eyes, ambient, sun, fill, angerLight } };
 }
