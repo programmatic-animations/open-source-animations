@@ -73,11 +73,11 @@ export async function speechRoute(req, res) {
           }
           if (includeVoice) await fs.copyFile(path.join(s.dir, 'voice.wav'), path.join(packageDir, 'voice.wav'));
           else await fs.rm(path.join(packageDir, 'voice.wav'), { force: true });
-          await fs.writeFile(path.join(packageDir, 'README.txt'), 'DaVinci Resolve: Extract this ZIP. In Media page > Media Storage, disable Show Individual Frames in the three-dot menu. Import frame-[00000-...].png as one image sequence. Set Clip Attributes > Video Frame Rate to 30 and Alpha Mode to Straight. Place above your main video. Import voice.wav separately if included, aligned to the first frame. Frames are 512x512 RGBA PNGs.');
+          await fs.writeFile(path.join(packageDir, 'README.txt'), `PLAYBACK RATE: 30 fps. ${s.next} frames = ${(s.next / 30).toFixed(3)} seconds.\n\nPNG sequences do not carry a playback frame rate. At 24 fps this sequence lasts ${(s.next / 24).toFixed(3)} seconds (25% too long).\n\nDaVinci Resolve: Extract this ZIP. In Media page > Media Storage, disable Show Individual Frames. Import frame-[00000-...].png as one image sequence. In the Media Pool, right-click the sequence > Clip Attributes > Video Frame Rate: 30; Alpha Mode: Straight. Do this before adding it to the timeline. Set the SOURCE clip rate to 30 even if your timeline uses another rate. Place above your main video. Import voice.wav separately if included, aligned to the first frame. Frames are 512x512 RGBA PNGs.`);
           const output = path.resolve('exports', `talking-mouth-${match[1]}-png.zip`);
           await fs.rm(output, { force: true });
           await run('python3', ['-m', 'zipfile', '-c', output, packageDir]);
-          res.writeHead(200, { 'Content-Type': 'application/zip', 'Content-Disposition': 'attachment; filename="talking-mouth-png.zip"' });
+          res.writeHead(200, { 'Content-Type': 'application/zip', 'Content-Disposition': 'attachment; filename="talking-mouth-30fps-png.zip"' });
           res.end(await fs.readFile(output));
           return true;
         }

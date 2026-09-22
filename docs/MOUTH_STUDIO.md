@@ -30,6 +30,10 @@ This is the default export and avoids the reported ProRes alpha problem.
 
 Do not import each PNG as a separate still. If that happens, remove those timeline items and reimport as a sequence. The sequence rate remains 30 fps even if the main timeline has a different rate.
 
+## Sequence plays too slowly or lasts too long
+
+PNG sequences contain frames without a playback rate. Resolve may interpret them at 24 fps: 951 frames then last 39.625 seconds instead of 31.7 seconds at the exported 30 fps. In the **Media Pool**, right-click the sequence → **Clip Attributes → Video Frame Rate → 30** before adding it to the timeline. This is the source clip rate; your timeline can keep its existing rate. If an existing timeline instance retains the old length, replace that instance from the corrected Media Pool clip and realign its start with the audio. No re-export is needed.
+
 ## ProRes MOV limitation
 
 The alternate MOV export uses ProRes 4444 with alpha and optional 48 kHz PCM audio. Local FFmpeg decoding confirms transparency, but the user observed an opaque black rectangle in Resolve despite selecting Straight alpha. The root cause is unconfirmed. Do not treat a successful FFmpeg alpha test as proof of Resolve compatibility; use the PNG option for this project. A player showing black by itself is not conclusive, but black obscuring an underlying clip is a compositing failure.
