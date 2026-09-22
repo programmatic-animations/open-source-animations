@@ -75,3 +75,46 @@ Episode 2's approved animation is 47 seconds with 14 shots. The reluctant close-
 - Shot duration changes also require updating choreography cues; automatic retiming is not implemented.
 
 Use this file as the initial handoff, then follow the user's latest request. Do not reread the whole repository to start a conversation. For marketing discussions, prioritize the creative concept and current conversation section over implementation details.
+
+# Episode 3 — version 1 (2026-09-18)
+
+- Public title: **DEA*H to the RABBITS**; scene ID `death-to-rabbits`, episode `ep3`. Latest/default episode, 47 seconds, 13 shots; first pass awaiting user revisions.
+- Opens with Episode 2's exact final camera and pose for two seconds. Then: hand tension and finger emergence, branch pickup, fiery eyes, spear throw, whole-head separation, bloody fall retaining honey in both paws, horrified survivors, pointing threat, two-second face hold then sharp-toothed grin and a three-second laughing hold (subtle jaw, head, and shoulder pulses).
+- `src/scenes/deathToRabbits.js` freezes the existing Episode 2 final world and adds reversible choreography. Episode 2 only exposes actor references; approved poses are unchanged.
+- Shots and choreography cues: `src/shots/deathToRabbitsShots.js`. Optional fingers: `src/characters/horrorHands.js`. Procedural bare trees: `src/environment/horrorForest.js`.
+- Preview: `/?episode=ep3&t=0`. Export: `exports/death-to-rabbits.mp4`. Silent first cut; no Episode 3 thumbnail yet. Landscape visually reviewed; vertical inherits the standard framing but has not been individually art-directed.
+- All 18 tests pass, including continuity with Episode 2, finite transforms, reversible effects, spear contact, and honey retention. Shot timing edits must also update choreography cues.
+
+- Motion update (2026-09-19): floor-safe pickup with an airborne spin, continuous wind-up through release, skeptical four-rabbit reaction at 17–19s, then a three-rabbit panic/escape at 34–39s. Escape paths fan into the forest with clear lanes and a camera pullback. Grin/laugh now plays at 39–47s. Rabbit acting additions live in `src/characters/rabbitActing.js`.
+
+# TikTok workflow setup (2026-09-20)
+
+- Episode 3 video creation is complete; the user is handling post-production.
+- Separate TikTok collection: `/?collection=tiktok`, registered in `src/tiktok/catalog.js`.
+- TikTok uses video → scenes → shots, locked to 1080×1920; MP4s save in `exports/tiktok/`.
+- Use unique `tiktok-` video/scene IDs. Existing episode URLs, formats and exports remain supported.
+- First TikTok: **Meet Balu**, `src/tiktok/intro/`, 35.657333s, four shots, silent 1080×1920.
+- Add original dialogue at 00:02.000 in post; two seconds of idle at both ends. No added mouth or audio track.
+- Body acting follows local audio energy plus transcript beats; expressive brows/eyes stay local to this scene. Preserve clear muzzle for the user's post-production overlay.
+
+# TikTok intro V2 (2026-09-20)
+
+- Dynamic alternative is `src/tiktok/introV2/`, scene `tiktok-intro-v2` under `tiktok-intro`.
+- V1 remains intact and is still the default scene. Select **Balu · made of code** for V2.
+- Same recording offset (00:02.000), duration and two-second idle handles; silent, no added mouth.
+- 17 shots with a motion/text hook, expressive reactions, code/wireframe reveal, hero cape, captions, follow prompt and comic farewell.
+- MP4: `exports/tiktok/tiktok-intro-v2-vertical.mp4`. All visuals are procedural.
+
+# Episode 3 thumbnail (2026-09-21)
+
+- `src/scenes/bearEp3Thumbnail.js`: procedural horror poster, looming bear silhouette and tiny survivors on the left, large scarlet canvas title on the right, fire eyes and blue forest mist. Original text-free PNG preserved as `exports/thumbnail/bear-ep3-no-title.png`. Registered under Episode 3.
+- Preview `/?episode=ep3&scene=thumbnail`; PNG `exports/thumbnail/bear-ep3-thumbnail.png` (1920×1080). Episode animation is unchanged.
+
+# TikTok 2 — He only said hi (2026-09-21, revised)
+
+- `tiktok-awkward-hello`, scene `tiktok-awkward-hello-main`, in `src/tiktok/awkwardHello/`. Latest TikTok; both intro versions remain under `tiktok-intro`.
+- Revised to 20.85s / nine portrait shots. Both characters keep walking during dialogue. Balu gains subtle eyebags/drooping eyelids, turns seamlessly and walks briskly to the cemetery. Cut to digging inside the ditch beside an existing headstone, then a flower-pluck insert and directly to the final overhead grave pose. The final overhead pullback holds two seconds longer.
+- Removed stone placement, shovel pickup, grave entry and reclining. Digging is one weighted scoop with blade-attached dirt and a ballistic toss; internet animation reference is linked in the local README.
+- No dialogue/audio/mouths baked in. Suggested starts: “Hi” 1.65s; “Good, how are you?” 2.85s; “…Good” 5.85s. Consult local README for windows.
+- Current export: `exports/tiktok/tiktok-awkward-hello-main-vertical.mp4`. Original 69.9s cut preserved as `exports/tiktok/tiktok-awkward-hello-v1-vertical.mp4`.
+- Preview: `/?collection=tiktok&video=tiktok-awkward-hello&t=0`. Shot-ID cues, continuous path/tangent and reversible local stress geometry preserve other videos.

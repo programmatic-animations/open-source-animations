@@ -45,3 +45,28 @@ A shot definition may specify `verticalZoom: 1.2` for a 20% tighter vertical com
 Format changes are live, without restarting stateful scenes. `format=vertical` in the URL survives navigation/export; missing or invalid values use landscape. MP4 and scene PNG dimensions follow the selected format; vertical filenames add `-vertical`. Thumbnails and Mouth Studio keep their separate output rules. Export remains per-scene.
 
 Verification: `tests/videoFormat.test.js` checks projection invariance, repeated application, landscape restoration, fitting, and names. Also review both preview orientations and exported dimensions when changing format plumbing.
+
+## Episode 3 reaction inserts
+
+Episode 3 is 47 seconds / 13 shots. `horrorStoryTime()` maps the displayed timeline to the existing 40-second choreography: 17–19s holds story time 17 for the skeptical reaction; 34–39s holds story time 32 for the escape. Later story cues resume unchanged, with the final shot at 39–47s. Shot cameras receive displayed local time; existing action cues use story time. The panic/run uses displayed time and continues into the ending, so backward seeking restores all three survivors. Edit both the mapping and shot definitions if these inserted durations change.
+
+## TikTok workflow
+
+Use the **Collection** selector or `/?collection=tiktok`. TikTok has a separate
+catalog in `src/tiktok/catalog.js`. The hierarchy is
+**video → scenes → shots**; reuse the same scene factories, assets and runtime.
+Register each video with `id`, `title`, and `scenes`, whose entries have
+`id`, `title`, `duration`, `shots`, `seekable`, and `create`.
+Use globally unique `tiktok-` prefixes for video and scene IDs, keeping saved
+end markers and downloaded PNG names separate from episodes.
+
+Links use `?collection=tiktok&video=<video-id>&scene=<scene-id>`.
+TikTok always uses 1080×1920, including when a stale URL requests landscape.
+Author cameras using the existing format-aware framing convention above.
+MP4s go to `exports/tiktok/<scene-id>-vertical.mp4`; scene PNGs download as
+`<scene-id>-vertical.png`. Episode URLs, format options, thumbnails and export
+locations remain compatible. Export is still per scene.
+
+The first intro lives in `src/tiktok/intro/`: recording-derived timing and transcript
+beats drive body and eye acting. Audio and mouth overlays remain post-production
+work. Mouth Studio remains independent.

@@ -1,4 +1,6 @@
 import http from 'node:http';
+import { randomUUID } from 'node:crypto';
+import { exportDestination } from './src/export/destination.js';
 import { speechRoute } from './scripts/speech-server.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -59,7 +61,7 @@ http.createServer(async (req, res) => {
     res.setHeader('Vary', 'Origin');
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Scene-Id, X-Speech-Language');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Scene-Id, X-Speech-Language, X-Video-Collection');
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -99,8 +101,10 @@ http.createServer(async (req, res) => {
       }
 
       const id = safeName(req.headers['x-scene-id']);
-      const temp = path.join(TEMP_DIR, `${id}.webm`);
-      const output = path.join(EXPORT_DIR, `${id}.mp4`);
+      const destination = exportDestination(req.headers['x-video-collection'] || 'episodes', id);
+      const temp = path.join(TEMP_DIR, `${randomUUID()}.webm`);
+      const output = path.join(EXPORT_DIR, destination);
+      await fs.mkdir(path.dirname(output), { recursive: true });
 
       await fs.writeFile(temp, Buffer.concat(chunks));
       await convertToMp4(temp, output);
@@ -110,7 +114,7 @@ http.createServer(async (req, res) => {
 
       return res.end(JSON.stringify({
         ok: true,
-        file: `exports/${id}.mp4`
+        file: `exports/${destination}`
       }));
     } catch (error) {
       res.writeHead(500, { 'Content-Type': 'application/json' });

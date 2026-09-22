@@ -2,11 +2,19 @@
 
 Three.js cinematic scenes with a reusable character/prop runtime and 1080p MP4 export.
 
+## Episode 3: DEA*H to the RABBITS — version 1
+
+The default episode is now Episode 3: a 47-second horror continuation in 13 shots. Open `/?episode=ep3&t=0` to review from the beginning, or use the shot selector. The opening holds Episode 2's exact final pose and camera for two seconds. The bear discovers his fingers, lifts and spins the fallen branch, ignites his eyes, and gets a skeptical reaction from all four rabbits. He attacks the honey-holding rabbit, points at the survivors, and watches them panic and scatter before his slow grin and restrained laugh. This first pass uses whole-head separation, blood particles, and a falling body retaining the honey. It is silent; no soundtrack is included.
+
+`src/scenes/deathToRabbits.js` composes the previous scene's frozen final world without changing its choreography. `src/shots/deathToRabbitsShots.js` owns the cuts and explicit choreography cues; `src/characters/horrorHands.js` adds optional fingers, and `src/environment/horrorForest.js` builds bare trees from geometry. Rabbit brows and running feet are optional additions in `src/characters/rabbitActing.js`. All poses and effects support reversible seeking. Update cue times alongside shot durations when editing. Episode 3 has a procedural horror thumbnail: a looming dark bear with fiery eyes above three tiny rabbits. Open `/?episode=ep3&scene=thumbnail`; Save thumbnail PNG writes `exports/thumbnail/bear-ep3-thumbnail.png` at 1920×1080.
+
+Landscape export writes `exports/death-to-rabbits.mp4`; Episode 1 and 2 remain available in the episode selector.
+
 ## Episode 2: Betrayal
 
-The default scene is `src/scenes/honeyBetrayal.js`: a 47-second continuation after the rabbits laugh. It covers their bargain, honey pickup, ladder deployment, climb, handover, betrayal, fall, and an angry close-up. `SHOTS` lists the editorial beats; every pose derives from absolute time.
+Episode 2's scene is `src/scenes/honeyBetrayal.js`: a 47-second continuation after the rabbits laugh. It covers their bargain, honey pickup, ladder deployment, climb, handover, betrayal, fall, and an angry close-up. `SHOTS` lists the editorial beats; every pose derives from absolute time.
 
-Use Play/Pause and the timeline to review. `?t=27` opens the new reluctant-reaction shot; `?episode=ep2&scene=thumbnail` opens the programmatic Episode 2 thumbnail; `?episode=ep1&scene=thumbnail` preserves the original. The bear looks up at the rabbit, glances at the offered paw, hesitates, then extends the comb. The continuation stops at 47 seconds and supplies that default export end time. Set End can override it. `npm run dev` starts both the preview and export server. The export button checks the server before recording. Both localhost and 127.0.0.1 preview origins are supported.
+Use Play/Pause and the timeline to review. `?episode=ep2&t=27` opens the reluctant-reaction shot; `?episode=ep2&scene=thumbnail` opens the programmatic Episode 2 thumbnail; `?episode=ep1&scene=thumbnail` preserves the original. The bear looks up at the rabbit, glances at the offered paw, hesitates, then extends the comb. The continuation stops at 47 seconds and supplies that default export end time. Set End can override it. `npm run dev` starts both the preview and export server. The export button checks the server before recording. Both localhost and 127.0.0.1 preview origins are supported.
 
 Validation: `node --test tests/honeyBetrayal.test.js` checks finite transforms, reversible scrubbing, and the story's final object positions.
 
@@ -76,7 +84,7 @@ export-server.mjs              WebM → H.264 MP4 via ffmpeg-static
 
 ## Scene 1 entry point
 
-`src/scenes/bearHoneyTrap.js` contains the original opening; `src/main.js` now defaults to the continuation described above.
+`src/scenes/bearHoneyTrap.js` contains the original opening; `src/main.js` defaults to the latest episode in the catalog.
 
 `SCENE_CONFIG`:
 
@@ -168,3 +176,29 @@ ProRes 4444 MOV remains available, but the user reported an opaque black backgro
 Exports are 512×512 at 30 fps, downloaded in the browser and copied to `exports/`. Processing stays local. The checkerboard is preview-only. See the guide for session lifetime and storage details.
 
 Validation: `node --test tests/*.test.js` and `npm run build`.
+
+## TikTok collection
+
+Choose **Collection → TikTok videos**, or open
+[the TikTok workspace](http://127.0.0.1:5173/?collection=tiktok).
+It has its own video catalog and is locked to **1080×1920 portrait**.
+MP4s save under `exports/tiktok/`; episodes retain their existing output paths
+and format options. The first video, **Meet Balu**, is a silent portrait intro with two-second idle handles.
+Place the original dialogue at **00:02.000** in post-production.
+See [authoring](docs/AUTHORING.md#tiktok-workflow) to add videos.
+The intro's body and eye acting follow the recording and transcript; mouth overlays
+and dialogue audio are added in post-production. See [intro notes](src/tiktok/intro/README.md).
+
+The intro also has a dynamic **V2 — Balu · made of code** in its scene selector:
+motion/text hook, code reveal, hero cape, expressive reactions and quicker cuts.
+It exports separately as `exports/tiktok/tiktok-intro-v2-vertical.mp4`.
+Both versions use the same audio placement at **00:02.000**.
+
+## TikTok 2 — He only said hi
+
+Open `/?collection=tiktok&video=tiktok-awkward-hello&t=0`. Balu and a new reusable
+monkey keep walking during an awkward greeting, followed by Balu's deadpan trip
+to the cemetery. The revised cut has nine portrait shots (20.85 seconds), a physical grave and an
+overhead pullback. It is silent; add dialogue and mouths in post. See
+[shot and dialogue notes](src/tiktok/awkwardHello/README.md). Export writes
+`exports/tiktok/tiktok-awkward-hello-main-vertical.mp4`.

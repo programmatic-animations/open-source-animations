@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { VIDEO_FORMATS, resolveVideoFormat, applyVideoFraming, fitVideoPreview } from './runtime/videoFormat.js';
-import { EPISODES, resolveSelection } from './episodes/catalog.js';
+import { resolveContentSelection, contentFormat, contentParams } from './runtime/contentSelection.js';
 import { getShotAt } from './runtime/shotTimeline.js';
 import { createSceneRuntime } from './runtime/sceneRuntime.js';
 import {
@@ -14,23 +14,33 @@ import {
 } from './export/recorder.js';
 import { setupScreenshotButton } from './export/screenshot.js';
 
+function startPreview() {
 document.body.style.margin = '0';
 document.body.style.overflow = 'hidden';
 
 const exportMode = isExportMode();
-const selection = resolveSelection(new URLSearchParams(location.search));
+const selection = resolveContentSelection(new URLSearchParams(location.search));
+if (!selection.scene) {
+  document.body.style.cssText = 'margin:0;background:#101010;color:#fff;font:16px system-ui';
+  document.body.innerHTML = '<main style="max-width:620px;margin:12vh auto;padding:24px"><a href="/" style="color:#a8d8ff">← Episodes</a><h1>TikTok videos</h1><p>Portrait · 1080 × 1920</p><p>No videos yet. Your first intro will appear here when it is created.</p><p>MP4 exports save separately in <code>exports/tiktok/</code>.</p></main>';
+  return;
+}
 const thumbnailMode = selection.thumbnail;
 const SCENE_CONFIG = selection.scene;
-let videoFormat = resolveVideoFormat(thumbnailMode ? 'landscape' : new URLSearchParams(location.search).get('format'));
+let videoFormat = contentFormat(selection, new URLSearchParams(location.search).get('format'));
 
 const savedEndTime = getSceneEndTime(SCENE_CONFIG.id);
-// The old full-scene marker must include the newly inserted reaction.
+// Full-scene markers from earlier cuts must include newly inserted reactions.
+const outdatedDefaultEnd = (SCENE_CONFIG.id === 'honey-betrayal' && savedEndTime === 43) ||
+  (SCENE_CONFIG.id === 'death-to-rabbits' && [37, 40].includes(savedEndTime));
 let sceneEndTime = Math.min(
-  SCENE_CONFIG.id === 'honey-betrayal' && savedEndTime === 43 ? SCENE_CONFIG.duration : (savedEndTime ?? SCENE_CONFIG.duration),
+  outdatedDefaultEnd ? SCENE_CONFIG.duration : (savedEndTime ?? SCENE_CONFIG.duration),
   SCENE_CONFIG.duration ?? Infinity
 );
 let assetsLoaded;
 const assetsReady = new Promise(resolve => { assetsLoaded = resolve; });
+let loadingAssets = false;
+THREE.DefaultLoadingManager.onStart = () => { loadingAssets = true; };
 THREE.DefaultLoadingManager.onLoad = () => assetsLoaded();
 
 const scene = new THREE.Scene();
@@ -66,11 +76,14 @@ let runtime;
 let refreshTransport;
 
 const { update } = SCENE_CONFIG.create({ scene, camera, renderer });
+// Fully procedural scenes have no loader callbacks to wait for.
+if (!loadingAssets) assetsLoaded();
 
 const exporter = createVideoExporter({
   renderer,
   camera,
   sceneConfig: SCENE_CONFIG,
+  collection: selection.collection,
   getVideoFormat: () => videoFormat,
   getSceneEndTime: () => sceneEndTime,
   restartScene: () => runtime.restartFromZero(),
@@ -150,10 +163,13 @@ if (!exportMode) {
     element.value = value; element.onchange = () => change(element.value); navigation.appendChild(element);
   }
   function navigate(episode, scene) {
-    const url = new URL(location.href); url.search = new URLSearchParams({ episode, scene, format: videoFormat.id }); location.href = url;
+    const url = new URL(location.href); url.search = contentParams(selection.collection, episode, scene, videoFormat.id); location.href = url;
   }
-  select('Episode', EPISODES.map(e => [e.id, e.title]), selection.episode.id, id => navigate(id, ''));
-  select('Scene', [...selection.episode.scenes.map(s => [s.id, s.title]), ['thumbnail', 'Thumbnail']], thumbnailMode ? 'thumbnail' : SCENE_CONFIG.id, id => navigate(selection.episode.id, id));
+  select('Collection', [['episodes', 'Episodes'], ['tiktok', 'TikTok videos']], selection.collection, id => {
+    location.href = id === 'tiktok' ? '/?collection=tiktok' : '/';
+  });
+  select(selection.collection === 'tiktok' ? 'Video' : 'Episode', selection.entries.map(e => [e.id, e.title]), selection.episode.id, id => navigate(id, ''));
+  select('Scene', [...selection.episode.scenes.map(s => [s.id, s.title]), ...(selection.episode.thumbnail ? [['thumbnail', 'Thumbnail']] : [])], thumbnailMode ? 'thumbnail' : SCENE_CONFIG.id, id => navigate(selection.episode.id, id));
   if (!thumbnailMode && SCENE_CONFIG.seekable) {
     select('Shot', SCENE_CONFIG.shots.map(s => [s.id, s.title]), getShotAt(SCENE_CONFIG.shots, runtime.getCurrentTime()).shot.id, id => {
       runtime.seek(SCENE_CONFIG.shots.find(s => s.id === id).start); runtime.pause();
@@ -162,11 +178,17 @@ if (!exportMode) {
     const refresh = refreshTransport;
     refreshTransport = time => { refresh?.(time); shotSelect.value = getShotAt(SCENE_CONFIG.shots, time).shot.id; };
   }
-  if (!thumbnailMode) select('Video format', VIDEO_FORMATS.map(f => [f.id, f.label]), videoFormat.id, id => {
+  if (!thumbnailMode && selection.collection !== 'tiktok') select('Video format', VIDEO_FORMATS.map(f => [f.id, f.label]), videoFormat.id, id => {
     videoFormat = resolveVideoFormat(id);
     const url = new URL(location.href); url.searchParams.set('format', id); history.replaceState(null, '', url);
     resizePreview();
   });
+  if (selection.collection === 'tiktok') {
+    const formatLabel = document.createElement('span');
+    formatLabel.textContent = 'TikTok · 1080 × 1920';
+    formatLabel.style.cssText = 'color:white;background:#25382d;padding:5px 10px;font:13px system-ui';
+    navigation.appendChild(formatLabel);
+  }
   const mouthLink = document.createElement('a');
   mouthLink.href = '/mouth.html'; mouthLink.textContent = 'Mouth Studio';
   Object.assign(mouthLink.style, { color: '#fff', background: '#25382d', padding: '5px 10px', borderRadius: '4px', font: '13px system-ui', textDecoration: 'none' });
@@ -176,3 +198,6 @@ if (!exportMode) {
 runtime.start();
 
 window.addEventListener('resize', resizePreview);
+
+}
+startPreview();

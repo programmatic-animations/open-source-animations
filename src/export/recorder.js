@@ -101,6 +101,7 @@ export function createVideoExporter({
   renderer,
   camera,
   sceneConfig,
+  collection = 'episodes',
   getVideoFormat = () => resolveVideoFormat(),
   getSceneEndTime,
   restartScene,
@@ -181,7 +182,8 @@ export function createVideoExporter({
             method: 'POST',
             headers: {
               'Content-Type': mimeType,
-              'X-Scene-Id': videoFilename(sceneConfig.id, format)
+              'X-Scene-Id': videoFilename(sceneConfig.id, format),
+              'X-Video-Collection': collection
             },
             body: blob
           }
