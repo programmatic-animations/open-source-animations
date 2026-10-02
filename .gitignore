@@ -28,3 +28,25 @@ dist-ssr
 *.sw?
 
 .tools/
+
+# Recorded audio and rendered video stay local (including mixed-case extensions).
+*.[mM][pP]4
+*.[mM][oO][vV]
+*.[wW][eE][bB][mM]
+*.[mM][kK][vV]
+*.[aA][vV][iI]
+*.[mM]4[vV]
+*.[mM][pP][eE][gG]
+*.[mM][pP][gG]
+*.[mM][pP]3
+*.[wW][aA][vV]
+*.[mM]4[aA]
+*.[aA][aA][cC]
+*.[fF][lL][aA][cC]
+*.[oO][gG][gG]
+*.[aA][iI][fF][fF]
+*.[aA][iI][fF]
+*.[oO][pP][uU][sS]
+*.[wW][mM][aA]
+# Mouth export ZIPs can contain voice.wav alongside image sequences.
+exports/*.[zZ][iI][pP]

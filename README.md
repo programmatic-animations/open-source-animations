@@ -2,6 +2,11 @@
 
 Three.js cinematic scenes with a reusable character/prop runtime and 1080p MP4 export.
 
+Audio recordings, generated audio, movies and export ZIPs stay local and are
+excluded from Git. Keep source code, docs, speech cue/transcript data and thumbnails
+in the repository. A fresh checkout needs the recordings supplied locally before
+speech preview/analysis; see [Dialogue workflow](docs/DIALOGUE_WORKFLOW.md).
+
 ## Native mouth test
 
 Open [native mouth test](http://127.0.0.1:5173/native-mouth-test.html) to hear the
