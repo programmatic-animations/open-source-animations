@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Native mouth · dialogue test</title></head>
+<body><div id="view"></div><main>
+<a href="/">← Animation preview</a><h1>Native mouth test</h1>
+<p>Your recordings drive mouths built into Balu and the rabbit.</p>
+<label>Dialogue <select id="line"></select></label><p id="transcript"></p>
+<button id="play" disabled>Play with audio</button><button id="reset" disabled>Restart</button>
+<label>Timeline <input id="time" type="range" min="0" max="5" step="0.001" value="0"></label><output id="state">Loading recordings…</output>
+<label>View <select id="camera"><option value="front">Front</option><option value="three">Three-quarter</option><option value="side">Side</option></select></label>
+<label>Expression <select id="emotion"><option value="neutral">Neutral</option><option value="friendly">Friendly</option><option value="worried">Worried</option></select></label>
+<label>Mouth intensity <input id="intensity" type="range" min="0.65" max="1" step="0.01" value="1"></label>
+<label>Mouth timing adjustment <input id="offset" type="range" min="-0.15" max="0.15" step="0.005" value="0"></label><output id="offset-label">0 ms</output>
+<p>Play to hear the selected line. Drag the timeline to inspect mouth poses. Camera and expression changes preserve playback.</p>
+<a id="download" href="/audio/native-mouth-test/generated/dialogue.wav" download>Download aligned dialogue WAV</a>
+<p><button id="export" disabled>Export test MP4</button></p><output id="export-state"></output>
+<p>The MP4 includes both lines with a gentle camera turn, using the current expression, intensity and timing adjustment.</p>
+<p id="error" role="alert"></p></main><script type="module" src="/src/nativeMouthTest/main.js"></script></body></html>

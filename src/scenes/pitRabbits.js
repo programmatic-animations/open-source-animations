@@ -580,6 +580,7 @@ export function createPitRabbitsScene({ scene, camera }) {
 
   return {
     config: SCENE_CONFIG,
-    update
+    update,
+    actors: { b: { bear, headGroup, leftArm, rightArm, leftLeg, rightLeg }, rabbits, honey: honeycomb, bees }
   };
 }

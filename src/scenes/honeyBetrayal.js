@@ -89,6 +89,8 @@ export function createHoneyBetrayalScene({ scene, camera }) {
   });
   const ropes = Array.from({ length: 2 }, () => Array.from({ length: 15 }, () => rod(scene, ropeMat, 0.035)));
   const rungs = Array.from({ length: 15 }, () => rod(scene, wood, 0.055));
+  ropes.flat().forEach((rope, i) => { rope.name = `story-ladder-rope-${i}`; });
+  rungs.forEach((rung, i) => { rung.name = `story-ladder-rung-${i}`; });
   const dust = Array.from({ length: 25 }, (_, i) => {
     const m = mesh(new THREE.SphereGeometry(0.08, 8, 6), new THREE.MeshBasicMaterial({ color: 0xa48a69, transparent: true, depthWrite: false }));
     m.userData.phase = i * 2.39996; return m;

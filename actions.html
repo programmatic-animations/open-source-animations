@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Balu · Action Studio</title></head>
+<body><div id="view"></div><main><h1>Balu · Pickup study</h1><p>Isolated motion preview · silent · original scenes unchanged</p>
+<label>Character <select id="character"><option value="balu">Balu · pickup</option><option value="rabbit">Rabbit · elbow motion study</option></select></label>
+<button id="play">Play</button><button id="reset">Reset</button>
+<label>Time <input id="time" type="range" min="0" max="5" step="0.01" value="0"></label><output id="state"></output>
+<label>Duration <input id="duration" type="range" min="2" max="6" step="0.1" value="4"></label>
+<label>Effort <input id="effort" type="range" min="0" max="1" step="0.05" value="0.5"></label>
+<label>Hesitation <input id="hesitation" type="range" min="0" max="1" step="0.05" value="0"></label>
+<label>View <select id="camera"><option value="three">Three-quarter</option><option value="front">Front</option><option value="side">Side</option></select></label>
+<label><input type="checkbox" id="blocked"> Block reach with solid</label>
+<label><input type="checkbox" id="volumes"> Show collision surfaces</label>
+<p>Drag the timeline forward or backward to inspect contact and continuity.</p></main><script type="module" src="/src/actionStudio/main.js"></script></body></html>

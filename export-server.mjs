@@ -2,6 +2,7 @@ import http from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { exportDestination } from './src/export/destination.js';
 import { speechRoute } from './scripts/speech-server.mjs';
+import { nativeMouthExportRoute } from './scripts/native-mouth-export.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -69,6 +70,7 @@ http.createServer(async (req, res) => {
   }
 
   if (await speechRoute(req, res)) return;
+  if (await nativeMouthExportRoute(req, res)) return;
 
   if (req.method === 'GET' && req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });

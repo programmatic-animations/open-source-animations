@@ -2,6 +2,30 @@
 
 Three.js cinematic scenes with a reusable character/prop runtime and 1080p MP4 export.
 
+## Native mouth test
+
+Open [native mouth test](http://127.0.0.1:5173/native-mouth-test.html) to hear the
+two supplied recordings drive procedural mouths on Balu and the rabbit. It has
+pause/scrub, camera views, expression/intensity controls and a 1920×1080 MP4
+export with dialogue. This is a separate first test; existing videos and Mouth
+Studio remain unchanged. See [setup, anatomy and export notes](docs/NATIVE_MOUTH_TEST.md).
+
+## New animations with dialogue
+
+Provide the script and one recording per spoken turn in `public/audio/<video-id>/`.
+WAV, MP3 and M4A are supported by the existing analysis approach; filenames can
+vary as long as speaker/line mapping is clear. The agent requests missing files,
+fits native mouth anatomy to each character, and times acting/cuts to the actual
+recordings. New dialogue animations should export with dialogue included, with
+editable source assets for your revisions. See [Dialogue workflow](docs/DIALOGUE_WORKFLOW.md)
+for the required agent procedure and current integration boundaries.
+
+## Continuing the latest video safely
+
+Before editing the current TikTok or episode, read `AGENTS.md` for the active handoff and preservation rules. Then read [AUTHORING.md](docs/AUTHORING.md), [ANIMATION_PRINCIPLES.md](docs/ANIMATION_PRINCIPLES.md), [RIGS.md](docs/RIGS.md), and [ACTIONS.md](docs/ACTIONS.md). These documents define the episode → scene → shot structure, continuity expectations, constrained character anatomy, collision/contact requirements, and deterministic motion rules. Check `git status` first and preserve existing changes, approved scenes, and versioned exports.
+
+The latest TikTok 4 work is the silent **The Bear V5** cut under `src/tiktok/theBear/`. V4 and V3 remain available as separate scenes and versioned MP4s. See `AGENTS.md` and the local TikTok README for the current review state.
+
 ## Episode 3: DEA*H to the RABBITS — version 1
 
 The default episode is now Episode 3: a 47-second horror continuation in 13 shots. Open `/?episode=ep3&t=0` to review from the beginning, or use the shot selector. The opening holds Episode 2's exact final pose and camera for two seconds. The bear discovers his fingers, lifts and spins the fallen branch, ignites his eyes, and gets a skeptical reaction from all four rabbits. He attacks the honey-holding rabbit, points at the survivors, and watches them panic and scatter before his slow grin and restrained laugh. This first pass uses whole-head separation, blood particles, and a falling body retaining the honey. It is silent; no soundtrack is included.
@@ -202,3 +226,57 @@ to the cemetery. The revised cut has nine portrait shots (20.85 seconds), a phys
 overhead pullback. It is silent; add dialogue and mouths in post. See
 [shot and dialogue notes](src/tiktok/awkwardHello/README.md). Export writes
 `exports/tiktok/tiktok-awkward-hello-main-vertical.mp4`.
+
+## TikTok 3 — The coast is clear
+
+Open `/?collection=tiktok&video=tiktok-capitol-crossing&t=0`. A 21-second portrait
+comedy outside a procedural Michigan Capitol: two-way traffic, watch and phone
+checks, a false opening, then a cartoon collision and X-eye landing. The crossing,
+impact and landing share one elevated rear three-quarter take. Silent; sound is
+added in post. See [shot notes](src/tiktok/capitolCrossing/README.md).
+Export: `exports/tiktok/tiktok-capitol-crossing-main-vertical.mp4`.
+
+## TikTok 4 — The Bear
+
+A separate **61.1-second / 26-shot** portrait edit combines Episodes 1–3 into one
+story, with new framing, a tighter handover/betrayal arc and implied revenge.
+Open `/?collection=tiktok&video=tiktok-the-bear&t=0`.
+The versioned MP4 includes a procedural sound pass; the browser and normal export
+remain silent. See [edit and output notes](src/tiktok/theBear/README.md).
+
+**TikTok 4 V3:** The previous cut is a silent 111.7-second, 32-shot story edit.
+It adds the upside-down sniff, branch vibration, seated pit arrival and bee
+continuity, a weighted honey pickup, camera pushes, a direct point, and a
+three-rabbit reaction and escape. See [edit notes](src/tiktok/theBear/README.md)
+and `exports/tiktok/tiktok-the-bear-v3-vertical.mp4`. The V2 MP4 is preserved.
+
+**TikTok 4 V4:** The earlier review cut is 117.55 seconds / 40 portrait shots.
+It restores scent, decision, climb and landing before the bargain; gives the
+hesitation and hurt separate close-ups; and keeps all three fleeing rabbits
+visible with their forest and fallen ladder intact. A later cinematic pass
+gives the survivors a closer fear reaction and a widening escape camera, with
+consistent cool rim light. Review `exports/tiktok/tiktok-the-bear-v4-cinematic-vertical.mp4`;
+the prior V4 MP4 and selectable V3 remain preserved. Select **The Bear — V4**
+in the preview. See [V4 notes](src/tiktok/theBear/README.md).
+
+**TikTok 4 V5:** The current default is a 114.65-second / 44-shot full directing
+pass. It adds the approach to the tree, re-stages the climb against the trunk,
+gives the first pit sit-up a struggle and look-up, distinguishes the rabbit's
+demand and Balu's hopeful ladder ascent, and removes a repeated anger hold.
+After Balu points, the three rabbits have time to look to one another before
+they turn and sprint for their lives.
+The story and silent format remain. Review
+`exports/tiktok/tiktok-the-bear-v5-vertical.mp4`; V4 and V3 remain selectable.
+See [V5 notes](src/tiktok/theBear/README.md).
+
+## TikTok 5 — Be You
+
+Open `/?collection=tiktok&video=tiktok-be-you&t=0`. A separate silent portrait
+short has a 30-second / thirteen-shot **first animation draft**, awaiting review.
+Balu asks how to get a girlfriend; the rabbits encourage authenticity, triggering
+an exaggerated power-up before they revise their advice. Staggered fingers,
+blazing eyes, multicoloured fire, wind-braced rabbits and their recovery lead to
+Balu crossing “Be myself” out of a notebook and becoming sad. The user's exact
+dialogue has provisional recording windows; audio and mouths are added in post.
+Review: `exports/tiktok/tiktok-be-you-v1-vertical.mp4`. See
+[dialogue, timing and research notes](src/tiktok/beYou/README.md).

@@ -1,0 +1,77 @@
+[
+  {
+    "id": "balu-question",
+    "time": 1.9800000000000002,
+    "file": "exports/tiktok/be-you-qa/01-balu-question.png"
+  },
+  {
+    "id": "rabbit-advice",
+    "time": 6.075,
+    "file": "exports/tiktok/be-you-qa/02-rabbit-advice.png"
+  },
+  {
+    "id": "balu-check",
+    "time": 8.98,
+    "file": "exports/tiktok/be-you-qa/03-balu-check.png"
+  },
+  {
+    "id": "rabbit-confirm",
+    "time": 10.635,
+    "file": "exports/tiktok/be-you-qa/04-rabbit-confirm.png"
+  },
+  {
+    "id": "balu-okay",
+    "time": 12.004999999999999,
+    "file": "exports/tiktok/be-you-qa/05-balu-okay.png"
+  },
+  {
+    "id": "power-up",
+    "time": 13.242499999999998,
+    "file": "exports/tiktok/be-you-qa/06-power-up.png"
+  },
+  {
+    "id": "eyes-ignite",
+    "time": 14.427499999999998,
+    "file": "exports/tiktok/be-you-qa/07-eyes-ignite.png"
+  },
+  {
+    "id": "aura-release",
+    "time": 16.88,
+    "file": "exports/tiktok/be-you-qa/08-aura-release.png"
+  },
+  {
+    "id": "rabbit-correction",
+    "time": 20.975,
+    "file": "exports/tiktok/be-you-qa/09-rabbit-correction.png"
+  },
+  {
+    "id": "rabbit-recovery",
+    "time": 24.1,
+    "file": "exports/tiktok/be-you-qa/10-rabbit-recovery.png"
+  },
+  {
+    "id": "notebook-tag",
+    "time": 25.935,
+    "file": "exports/tiktok/be-you-qa/11-notebook-tag.png"
+  },
+  {
+    "id": "notebook-insert",
+    "time": 27.607499999999998,
+    "file": "exports/tiktok/be-you-qa/12-notebook-insert.png"
+  },
+  {
+    "id": "sad-button",
+    "time": 29.257499999999997,
+    "file": "exports/tiktok/be-you-qa/13-sad-button.png"
+  },
+  {
+    "id": "wind-stops",
+    "time": 23.4,
+    "file": "exports/tiktok/be-you-qa/14-wind-stops.png"
+  },
+  {
+    "id": "rabbits-steady",
+    "time": 24.8,
+    "file": "exports/tiktok/be-you-qa/15-rabbits-steady.png"
+  }
+]

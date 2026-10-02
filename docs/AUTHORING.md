@@ -10,6 +10,10 @@ The preview selectors follow this hierarchy. Choose an episode and scene; choose
 
 ## Adding work
 
+For character motion, follow [Rig contracts](RIGS.md): anatomy → constrained rig → actions → performance.
+
+Read [Animation principles](ANIMATION_PRINCIPLES.md) and the [action library convention and inventory](ACTIONS.md) before authoring. Apply them to new work and requested revisions; preserve approved legacy performances unless changes are requested. A scene is a narrative unit, a location is a reusable environment, and a shot is a camera view: these do not require separate copies of the world.
+
 1. Build a scene factory in `src/scenes/`, reusing `characters/`, `props/`, and `environment/`. Return `{ config, update(sceneTime) }`.
 2. Define its shots in `src/shots/` with `defineShots([...])`. Add stable IDs and durations. A moving shot can use `shotTime` and `progress` from `updateShot()`.
 3. Update shared character/prop choreography, then call `updateShot(shots, sceneTime, context)` to apply the selected camera and direction.
@@ -66,6 +70,17 @@ Author cameras using the existing format-aware framing convention above.
 MP4s go to `exports/tiktok/<scene-id>-vertical.mp4`; scene PNGs download as
 `<scene-id>-vertical.png`. Episode URLs, format options, thumbnails and export
 locations remain compatible. Export is still per scene.
+
+## Dialogue authoring
+
+For new scripts with spoken lines, follow [Dialogue workflow](DIALOGUE_WORKFLOW.md):
+check recordings and request missing turns before final timing; use character-specific
+native mouths, recording-led acting and an export containing the dialogue. Schedule
+lines by stable IDs and evaluate mouth cues from absolute scene time minus line
+start. Changing a recording requires cue regeneration and coordinated retiming of
+shots, acting and the dialogue stem. Automatic story retiming is not implemented.
+The general scene exporter remains silent until a new dialogue scene's audio
+integration is implemented; the native mouth test demonstrates the complete path.
 
 The first intro lives in `src/tiktok/intro/`: recording-derived timing and transcript
 beats drive body and eye acting. Audio and mouth overlays remain post-production

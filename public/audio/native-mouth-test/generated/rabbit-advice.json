@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "soundFile": "/Users/gzero/Desktop/bear-animation/public/audio/native-mouth-test/generated/rabbit-advice-analysis.wav",
+    "duration": 4.04
+  },
+  "mouthCues": [
+    { "start": 0.00, "end": 0.06, "value": "X" },
+    { "start": 0.06, "end": 0.17, "value": "A" },
+    { "start": 0.17, "end": 0.73, "value": "B" },
+    { "start": 0.73, "end": 0.84, "value": "A" },
+    { "start": 0.84, "end": 1.11, "value": "C" },
+    { "start": 1.11, "end": 1.25, "value": "B" },
+    { "start": 1.25, "end": 1.32, "value": "F" },
+    { "start": 1.32, "end": 1.53, "value": "C" },
+    { "start": 1.53, "end": 1.60, "value": "B" },
+    { "start": 1.60, "end": 1.67, "value": "C" },
+    { "start": 1.67, "end": 2.02, "value": "E" },
+    { "start": 2.02, "end": 2.09, "value": "B" },
+    { "start": 2.09, "end": 2.23, "value": "C" },
+    { "start": 2.23, "end": 2.51, "value": "B" },
+    { "start": 2.51, "end": 2.65, "value": "F" },
+    { "start": 2.65, "end": 2.73, "value": "A" },
+    { "start": 2.73, "end": 3.37, "value": "B" },
+    { "start": 3.37, "end": 3.51, "value": "C" },
+    { "start": 3.51, "end": 3.58, "value": "H" },
+    { "start": 3.58, "end": 3.79, "value": "G" },
+    { "start": 3.79, "end": 4.04, "value": "X" }
+  ]
+}

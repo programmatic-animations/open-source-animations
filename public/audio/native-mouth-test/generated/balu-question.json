@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "soundFile": "/Users/gzero/Desktop/bear-animation/public/audio/native-mouth-test/generated/balu-question-analysis.wav",
+    "duration": 4.28
+  },
+  "mouthCues": [
+    { "start": 0.00, "end": 0.43, "value": "X" },
+    { "start": 0.43, "end": 0.55, "value": "A" },
+    { "start": 0.55, "end": 1.00, "value": "E" },
+    { "start": 1.00, "end": 1.14, "value": "F" },
+    { "start": 1.14, "end": 1.36, "value": "B" },
+    { "start": 1.36, "end": 1.50, "value": "C" },
+    { "start": 1.50, "end": 1.64, "value": "F" },
+    { "start": 1.64, "end": 1.85, "value": "B" },
+    { "start": 1.85, "end": 1.92, "value": "C" },
+    { "start": 1.92, "end": 2.27, "value": "E" },
+    { "start": 2.27, "end": 2.34, "value": "G" },
+    { "start": 2.34, "end": 2.41, "value": "B" },
+    { "start": 2.41, "end": 2.48, "value": "C" },
+    { "start": 2.48, "end": 2.56, "value": "A" },
+    { "start": 2.56, "end": 2.91, "value": "E" },
+    { "start": 2.91, "end": 3.05, "value": "F" },
+    { "start": 3.05, "end": 4.12, "value": "X" },
+    { "start": 4.12, "end": 4.28, "value": "B" }
+  ]
+}

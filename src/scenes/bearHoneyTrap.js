@@ -405,6 +405,7 @@ export function createBearHoneyTrapScene({ scene }) {
 
   return {
     config: SCENE_CONFIG,
-    update
+    update,
+    actors: { b: { bear, headGroup, leftArm, rightArm, leftLeg, rightLeg, nose }, bear, headGroup, leftArm, rightArm, honey: honeycomb, honeycomb, branchPivot, pitGroup, bees }
   };
 }
